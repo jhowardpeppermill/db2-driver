@@ -33,6 +33,7 @@ class DB2SchemaGrammar extends Grammar
      * @var array
      */
     protected $serials = [
+        'tinyInteger',
         'smallInteger',
         'integer',
         'bigInteger',
@@ -504,6 +505,17 @@ class DB2SchemaGrammar extends Grammar
      * @return string
      */
     protected function typeSmallInteger(Fluent $column)
+    {
+        return 'smallint';
+    }
+
+    /**
+     * Create the column definition for a small integer type.
+     *
+     * @param  \Illuminate\Support\Fluent  $column
+     * @return string
+     */
+    protected function typeTinyInteger(Fluent $column)
     {
         return 'smallint';
     }

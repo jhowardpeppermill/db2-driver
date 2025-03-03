@@ -4,6 +4,7 @@ namespace BWICompanies\DB2Driver;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\Grammars\Grammar;
+use Illuminate\Support\Str;
 
 class DB2QueryGrammar extends Grammar
 {
@@ -246,5 +247,39 @@ class DB2QueryGrammar extends Grammar
     public function compileSavepoint($name)
     {
         return 'SAVEPOINT '.$name.' ON ROLLBACK RETAIN CURSORS';
+    }
+
+    /**
+     * Compile an insert ignore statement into SQL.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $values
+     * @return string
+     */
+    public function compileInsertOrIgnore(Builder $query, array $values): string
+    {
+        //TODO: figure out how to do this in DB2
+        return $this->compileInsert($query, $values);
+//        return 'CREATE PROCEDURE INSERT_OR_IGNORE
+//                    LANGUAGE SQL
+//                BEGIN
+//                        DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+//                            SET counter = -1;
+//                        EXECUTE IMMEDIATE \'' . $this->compileInsert($query, $values) . '\';
+//                END;';
+    }
+
+    /**
+     * Compile an insert ignore statement using a subquery into SQL.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $columns
+     * @param  string  $sql
+     * @return string
+     */
+    public function compileInsertOrIgnoreUsing(Builder $query, array $columns, string $sql): string
+    {
+        //TODO: figure out how to do this in DB2
+        return $this->compileInsertUsing($query, $columns, $sql);
     }
 }

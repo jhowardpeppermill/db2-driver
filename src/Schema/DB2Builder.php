@@ -85,4 +85,37 @@ class DB2Builder extends Builder
 
         return new DB2Blueprint($table, $callback);
     }
+
+    public function dropAllTables()
+    {
+        $tables = $this->getTables();
+
+        if (empty($tables)) {
+            return;
+        }
+
+//        $this->disableForeignKeyConstraints();
+
+        foreach ($tables as $table) {
+            $this->connection->statement(
+                $this->grammar->compileDropTable($table)
+            );
+        }
+
+//        $this->enableForeignKeyConstraints();
+    }
+
+    /**
+     * Get the tables for the database.
+     *
+     * @return array{array{name: string, schema: string, comment: string}}
+     */
+    public function getTables()
+    {
+        return $this->connection->getPostProcessor()->processTables(
+            $this->connection->selectFromWriteConnection(
+                $this->grammar->compileTables($this->connection->getDatabaseName())
+            )
+        );
+    }
 }

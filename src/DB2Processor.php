@@ -48,4 +48,24 @@ class DB2Processor extends Processor
     {
         return $results;
     }
+
+    /**
+     * Process the results of a tables query.
+     *
+     * @param  array  $results
+     * @return array
+     */
+    public function processTables($results)
+    {
+        return array_map(function ($result) {
+            $result = (object) $result;
+
+            return [
+                'name' => $result->name,
+                'schema' => $result->schema ?? null,
+                'size' => isset($result->size) ? (int) $result->size : null,
+                'comment' => $result->comment ?? null,
+            ];
+        }, $results);
+    }
 }

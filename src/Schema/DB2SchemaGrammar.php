@@ -884,4 +884,48 @@ EOT;
 
         return $this->compileExecuteCommand($blueprint, $command);
     }
+
+    /**
+     * Compile the query to determine the tables.
+     *
+     * @param  string  $database
+     * @return string
+     */
+    public function compileTables($database)
+    {
+        return "SELECT
+                    TABLE_SCHEMA AS schema,
+                    TABLE_NAME AS name,
+                    TABLE_TEXT AS comment,
+                    0 AS size
+                FROM
+                    QSYS2.SYSTABLES
+                WHERE
+                    TABLE_SCHEMA = '" . $this->cleanLibraryName($database) . "'
+                    AND SYSTEM_TABLE = 'N'
+                    AND TABLE_TYPE = 'T'
+                ORDER BY
+                    TABLE_NAME";
+    }
+
+    /**
+     * Compile the SQL needed to drop all tables.
+     *
+     * @param  array{name: string, schema: string, comment: string}  $table
+     * @return string
+     */
+    public function compileDropTable(array $table): string
+    {
+        return 'DROP TABLE "' . $this->cleanLibraryName($table['schema']) . '"."' . $this->cleanLibraryName($table['name']) . '"';
+    }
+
+    /**
+     * Sanitizes a string for use as a library name in a query.
+     * @param string $libraryName Library name to sanitize.
+     * @return string
+     */
+    public function cleanLibraryName(string $libraryName = ''): string
+    {
+        return preg_replace('/[^0-9a-z_@#$]/i', '', $libraryName);
+    }
 }

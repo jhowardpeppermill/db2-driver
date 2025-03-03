@@ -78,7 +78,7 @@ class DB2Connection extends Connection
      */
     protected function getDefaultQueryGrammar()
     {
-        $defaultGrammar = new DB2QueryGrammar;
+        $defaultGrammar = new DB2QueryGrammar($this);
 
         // If a date format was specified in constructor
         if (array_key_exists('date_format', $this->config)) {
@@ -90,7 +90,11 @@ class DB2Connection extends Connection
             $defaultGrammar->setOffsetCompatibilityMode($this->config['offset_compatibility_mode']);
         }
 
-        return $this->withTablePrefix($defaultGrammar);
+        if (method_exists($this, 'withTablePrefix')) {
+            return $this->withTablePrefix($defaultGrammar);
+        }
+
+        return $defaultGrammar;
     }
 
     /**

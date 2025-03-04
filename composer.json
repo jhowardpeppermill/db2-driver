@@ -1,7 +1,7 @@
 {
     "name": "jhowardpeppermill/db2-driver",
     "description": "DB2 for IBM iSeries drop-in Laravel driver",
-    "version": "0.1.1",
+    "version": "0.2.1",
     "keywords": [
         "BWICompanies",
         "laravel",
